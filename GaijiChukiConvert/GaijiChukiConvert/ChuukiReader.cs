@@ -14,10 +14,6 @@ public static class ChuukiReader
 
     public async static Task<Schemas.dictionary> LoadDictionary(TextReader reader)
     {
-        Schemas.entry? current = null;
-        List<Schemas.entry> entries = new();
-        Schemas.page? page = null;
-        List<Schemas.page> pages = new();
 
         int pageCnt = 1;
 
@@ -31,241 +27,259 @@ public static class ChuukiReader
             if (line.Contains("【十五・十六・十七画】")) break;
         }
 
-        while (true)
+        string? nextLine = null;
+        var result = new Schemas.dictionary();
         {
-            var line = await reader.ReadLineAsync();
+            Schemas.entry? current = null;
+            List<Schemas.entry> entries = new();
+            Schemas.page? page = null;
+            List<Schemas.page> pages = new();
 
-            if (line == null) break;
-
-            //while (line.Contains('［') && !line.Contains('］'))
-            while (line.Count(a => a == '［') != line.Count(a => a == '］'))
+            while (true)
             {
-                line = Regex.Replace(line, @"[\s　]+$", "");
-                line += await reader.ReadLineAsync();
-            }
+                var line = await reader.ReadLineAsync();
 
-            //while (line.Contains('【') && !line.Contains('】'))
-            while (line.Count(a => a == '【') != line.Count(a => a == '】'))
-            {
-                line = Regex.Replace(line, @"[\s　]+$", "");
-                line += await reader.ReadLineAsync();
-            }
-            if (line.Contains("包摂適用"))
-            {
-                line = Regex.Replace(line, @"[\s　]+$", "");
-                line += await reader.ReadLineAsync();
-            }
+                if (line == null) break;
 
-            if (line.Contains('\f')) pageCnt++;
-
-            {
-                var match = Regex.Match(line, @"^(.+)【その他】に戻る[\s　]*$");
-                if (match.Success)
+                //while (line.Contains('［') && !line.Contains('］'))
+                while (line.Count(a => a == '［') != line.Count(a => a == '］'))
                 {
-                    if (page is not null)
-                    {
-                        if (current is not null) entries.Add(current);
-                        page.entries = entries.ToArray();
-                        pages.Add(page);
-                    }
-                    break;
-                }
-            }
-
-            {
-                var match = Regex.Match(line, @"^(\d+)．");
-                if (match.Success)
-                {
-                    if (current is not null)
-                    {
-                        entries.Add(current);
-                    }
-                    current = new Schemas.entry() { docPage = pageCnt.ToString() ,characters=new Schemas.entryCharacters()};
-                    current.strokes = match.Groups[1].Value;
-                }
-            }
-
-            {
-                var match = Regex.Match(line, @"^(.+)【(.+)】[\s　]*部首・読み索引に戻る[\s　]*部首・画数索引に戻る[\s　]*$");
-                if (match.Success)
-                {
-                    string r = match.Groups[1].Value;
-                    r = new Regex(@"[\s　]").Replace(r, "");
-                    string c = match.Groups[2].Value;
-                    if (page is not null)
-                    {
-                        if (current is not null) entries.Add(current);
-                        page.entries = entries.ToArray();
-                        entries = new List<Schemas.entry>();
-                        pages.Add(page);
-                        current = null;
-                    }
-                    page = new Schemas.page();
-                    page.radical = new Schemas.pageRadical()
-                    {
-                        readings = new Schemas.pageRadicalReadings() { reading = r.Split('・') },
-                        characters = new Schemas.pageRadicalCharacters() { character = EnumerateCharacters(c) }
-                    };
-                    continue;
-                }
-            }
-
-            if (current is null) continue;
-
-            {
-                var match = Regex.Match(line, @"([^］．]+)→[\s\t　]*［");
-                if (match.Success)
-                {
-                    var text = Regex.Replace(match.Groups[1].Value, @"[\s　]", "");
-                    if (text.Length > 0)
-                    {
-                        current.characters = new Schemas.entryCharacters() { character = EnumerateCharacters(text) };
-                    }
-                }
-            }
-
-            {
-                // language=regex
-                var regex = @"［包摂適用[\s　]+(.+)］[\s　]*([\d、]*)";
-                var match = Regex.Match(line, regex);
-                if (match.Success)
-                {
-                    var result = new Schemas.entryInclusionApplication();
-                    var match2 = Regex.Match(match.Groups[1].Value, NotePattern);
-                    if (match2.Success)
-                    {
-                        result.Item = GetNoteSerializable(match2.Groups[1].Value);
-                    }
-                    else
-                    {
-                        result.Item = match.Groups[1].Value;
-                    }
-
-                    {
-                        result.reference = match.Groups[2].Value.Split("、").Where(a=>!string.IsNullOrWhiteSpace(a))
-                            .Select(a => new Schemas.entryInclusionApplicationReference() { page = a }).ToArray();
-                    }
-
-                    line = line.Replace(match.Value, "");
-                    current.Item = result;
-                }
-            }
-
-            {
-                // language=regex
-                var regex = @"［統合適用[\s　]+(.+)］";
-                var match = Regex.Match(line, regex);
-                if (match.Success)
-                {
-                    var result = new Schemas.entryIntegrationApplication();
-                    var match2 = Regex.Match(match.Groups[1].Value, NotePattern);
-                    if (match2.Success)
-                    {
-                        result.Item = GetNoteSerializable(match2.Groups[1].Value);
-                    }
-                    else
-                    {
-                        result.Item = match.Groups[1].Value;
-                    }
-
-                    line = line.Replace(match.Value, "");
-                    current.Item = result;
-                }
-            }
-
-            {
-                // language=regex
-                var regex = @"［78互換包摂[\s　]+(.+)］";
-                var match = Regex.Match(line, regex);
-                if (match.Success)
-                {
-                    var result = new Schemas.entryCompatible78Inclusion
-                    {
-                        @ref = match.Groups[1].Value,
-                    };
-                    line = line.Replace(match.Value, "");
-                    current.Item = result;
-                }
-            }
-
-            {
-                // language=regex
-                var regex = @"［デザイン差[\s　]+(.+)］";
-                var match = Regex.Match(line, regex);
-                if (match.Success)
-                {
-                    var result = new Schemas.entryDesignVariant
-                    {
-                        @ref = match.Groups[1].Value
-                    };
-                    line = line.Replace(match.Value, "");
-                    current.Item = result;
-                }
-            }
-
-            {
-                // language=regex
-                var regex = @"([^］．\s　]+)[\s　]+入力可能";
-                var match = Regex.Match(line, regex);
-                if (match.Success)
-                {
-                    line = line.Replace(match.Value, "");
-                    current.Item = new object();//意味不明だけど、objectがinputableになるっぽい。
+                    line = Regex.Replace(line, @"[\s　]+$", "");
+                    line += await reader.ReadLineAsync();
                 }
 
+                //while (line.Contains('【') && !line.Contains('】'))
+                while (line.Count(a => a == '【') != line.Count(a => a == '】'))
                 {
-                    var text = Regex.Replace(match.Groups[1].Value, @"[\s　]", "");
-                    if (text.Length > 0)
-                    {
-                        current.characters = new Schemas.entryCharacters() { character = EnumerateCharacters(text) };
-                    }
+                    line = Regex.Replace(line, @"[\s　]+$", "");
+                    line += await reader.ReadLineAsync();
                 }
-            }
-
-            {
-                var match = Regex.Match(line, $@"([^\d+．]+){NotePattern}");
-                if (match.Success)
+                if (line.Contains("包摂適用"))
                 {
+                    line = Regex.Replace(line, @"[\s　]+$", "");
+                    line += await reader.ReadLineAsync();
+                }
+
+                if (line.Contains('\f')) pageCnt++;
+
+                {
+                    var match = Regex.Match(line, @"^(.+)【その他】に戻る[\s　]*$");
+                    if (match.Success)
                     {
-                        var chars = match.Groups[1].Value;
-                        chars = Regex.Replace(chars, @"[\s　]", "");
-                        current.characters = new Schemas.entryCharacters()
+                        if (page is not null)
                         {
-                            character = EnumerateCharacters(chars),
+                            if (current is not null) entries.Add(current);
+                            page.entries = entries.ToArray();
+                            pages.Add(page);
+                        }
+                        nextLine = line;
+                        break;
+                    }
+                }
+
+                {
+                    var match = Regex.Match(line, @"^(\d+)．");
+                    if (match.Success)
+                    {
+                        if (current is not null)
+                        {
+                            entries.Add(current);
+                        }
+                        current = new Schemas.entry() { docPage = pageCnt.ToString(), characters = new Schemas.entryCharacters() };
+                        current.strokes = match.Groups[1].Value;
+                    }
+                }
+
+                {
+                    var match = Regex.Match(line, @"^(.+)【(.+)】[\s　]*部首・読み索引に戻る[\s　]*部首・画数索引に戻る[\s　]*$");
+                    if (match.Success)
+                    {
+                        string r = match.Groups[1].Value;
+                        r = new Regex(@"[\s　]").Replace(r, "");
+                        string c = match.Groups[2].Value;
+                        if (page is not null)
+                        {
+                            if (current is not null) entries.Add(current);
+                            page.entries = entries.ToArray();
+                            entries = new List<Schemas.entry>();
+                            pages.Add(page);
+                            current = null;
+                        }
+                        page = new Schemas.page();
+                        page.radical = new Schemas.pageRadical()
+                        {
+                            readings = new Schemas.pageRadicalReadings() { reading = r.Split('・') },
+                            characters = new Schemas.pageRadicalCharacters() { character = EnumerateCharacters(c) }
                         };
+                        continue;
+                    }
+                }
+
+                if (current is null) continue;
+
+                {
+                    var match = Regex.Match(line, @"([^］．]+)→[\s\t　]*［");
+                    if (match.Success)
+                    {
+                        var text = Regex.Replace(match.Groups[1].Value, @"[\s　]", "");
+                        if (text.Length > 0)
+                        {
+                            current.characters = new Schemas.entryCharacters() { character = EnumerateCharacters(text) };
+                        }
+                    }
+                }
+
+                {
+                    // language=regex
+                    var regex = @"［包摂適用[\s　]+(.+)］[\s　]*([\d、]*)";
+                    var match = Regex.Match(line, regex);
+                    if (match.Success)
+                    {
+                        var tmp = new Schemas.entryInclusionApplication();
+                        var match2 = Regex.Match(match.Groups[1].Value, NotePattern);
+                        if (match2.Success)
+                        {
+                            tmp.Item = GetNoteSerializable(match2.Groups[1].Value);
+                        }
+                        else
+                        {
+                            tmp.Item = match.Groups[1].Value;
+                        }
+
+                        {
+                            tmp.reference = match.Groups[2].Value.Split("、").Where(a => !string.IsNullOrWhiteSpace(a))
+                                .Select(a => new Schemas.entryInclusionApplicationReference() { page = a }).ToArray();
+                        }
+
+                        line = line.Replace(match.Value, "");
+                        current.Item = tmp;
+                    }
+                }
+
+                {
+                    // language=regex
+                    var regex = @"［統合適用[\s　]+(.+)］";
+                    var match = Regex.Match(line, regex);
+                    if (match.Success)
+                    {
+                        var tmp = new Schemas.entryIntegrationApplication();
+                        var match2 = Regex.Match(match.Groups[1].Value, NotePattern);
+                        if (match2.Success)
+                        {
+                            tmp.Item = GetNoteSerializable(match2.Groups[1].Value);
+                        }
+                        else
+                        {
+                            tmp.Item = match.Groups[1].Value;
+                        }
+
+                        line = line.Replace(match.Value, "");
+                        current.Item = tmp;
+                    }
+                }
+
+                {
+                    // language=regex
+                    var regex = @"［78互換包摂[\s　]+(.+)］";
+                    var match = Regex.Match(line, regex);
+                    if (match.Success)
+                    {
+                        var tmp = new Schemas.entryCompatible78Inclusion
+                        {
+                            @ref = match.Groups[1].Value,
+                        };
+                        line = line.Replace(match.Value, "");
+                        current.Item = tmp;
+                    }
+                }
+
+                {
+                    // language=regex
+                    var regex = @"［デザイン差[\s　]+(.+)］";
+                    var match = Regex.Match(line, regex);
+                    if (match.Success)
+                    {
+                        var tmp = new Schemas.entryDesignVariant
+                        {
+                            @ref = match.Groups[1].Value
+                        };
+                        line = line.Replace(match.Value, "");
+                        current.Item = tmp;
+                    }
+                }
+
+                {
+                    // language=regex
+                    var regex = @"([^］．\s　]+)[\s　]+入力可能";
+                    var match = Regex.Match(line, regex);
+                    if (match.Success)
+                    {
+                        line = line.Replace(match.Value, "");
+                        current.Item = new object();//意味不明だけど、objectがinputableになるっぽい。
                     }
 
                     {
-                        current.note = GetNoteSerializable(match.Groups[2].Value);
+                        var text = Regex.Replace(match.Groups[1].Value, @"[\s　]", "");
+                        if (text.Length > 0)
+                        {
+                            current.characters = new Schemas.entryCharacters() { character = EnumerateCharacters(text) };
+                        }
                     }
                 }
-            }
 
-            {
-                var matches = Regex.Matches(line, @"UCV(\d+)");
-                var list = current.UCV?.ToList() ?? new List<Schemas.entryUCV>();
-                foreach (Match match in matches)
                 {
-                    list.Add(new Schemas.entryUCV() { number=match.Groups[1].Value });
+                    var match = Regex.Match(line, $@"([^\d+．]+){NotePattern}");
+                    if (match.Success)
+                    {
+                        {
+                            var chars = match.Groups[1].Value;
+                            chars = Regex.Replace(chars, @"[\s　]", "");
+                            current.characters = new Schemas.entryCharacters()
+                            {
+                                character = EnumerateCharacters(chars),
+                            };
+                        }
+
+                        {
+                            current.note = GetNoteSerializable(match.Groups[2].Value);
+                        }
+                    }
                 }
-                current.UCV = list.ToArray();
+
+                {
+                    var matches = Regex.Matches(line, @"UCV(\d+)");
+                    var list = current.UCV?.ToList() ?? new List<Schemas.entryUCV>();
+                    foreach (Match match in matches)
+                    {
+                        list.Add(new Schemas.entryUCV() { number = match.Groups[1].Value });
+                    }
+                    current.UCV = list.ToArray();
+                }
+
+                {
+                    if (line.Contains('★')) current.duplicate = true;
+                    if (line.Contains("補助のみ")) current.supplement = Schemas.entrySupplement.supplementOnly;
+                    if (line.Contains("補助漢字と共通")) current.supplement = Schemas.entrySupplement.supplementCommon;
+                }
+
             }
 
-            {
-                if (line.Contains('★')) current.duplicate = true;
-                if (line.Contains("補助のみ")) current.supplement = Schemas.entrySupplement.supplementOnly;
-                if (line.Contains("補助漢字と共通")) current.supplement = Schemas.entrySupplement.supplementCommon;
-            }
-
+            result.kanji = new Schemas.dictionaryKanji() { page = pages.ToArray() };
         }
 
-        return new Schemas.dictionary()
         {
-            kanji = new Schemas.dictionaryKanji()
+            while (true)
             {
-                page = pages.ToArray(),
+                var line = nextLine ?? await reader.ReadLineAsync();
+
+                if (line == null) break;
+                if (line.Contains('\f')) pageCnt++;
+
+                break;
             }
-        };
+        }
+
+        return result;
     }
 
     public static Schemas.note GetNoteSerializable(string text)

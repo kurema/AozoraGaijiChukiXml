@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <xs:schema id="Chuki"
-    targetNamespace="https://github.com/kurema/aozora2htmlSharp/blob/master/tools/gaiji_chuki/GaijiChukiConvert/GaijiChukiConvert/Schemas/Chuki.xsd"
+    targetNamespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd"
     elementFormDefault="qualified"
-    xmlns="https://github.com/kurema/aozora2htmlSharp/blob/master/tools/gaiji_chuki/GaijiChukiConvert/GaijiChukiConvert/Schemas/Chuki.xsd"
-    xmlns:mstns="https://github.com/kurema/aozora2htmlSharp/blob/master/tools/gaiji_chuki/GaijiChukiConvert/GaijiChukiConvert/Schemas/Chuki.xsd"
+    xmlns="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd"
+    xmlns:mstns="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
 >
 	<xs:element name="dictionary">

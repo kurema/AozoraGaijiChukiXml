@@ -20,10 +20,8 @@ namespace GaijiChukiConvert.Schemas {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/aozora2htmlSharp/blob/master/tools/gaiji_chuki/GaijiChu" +
-        "kiConvert/GaijiChukiConvert/Schemas/Chuki.xsd")]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace="https://github.com/kurema/aozora2htmlSharp/blob/master/tools/gaiji_chuki/GaijiChu" +
-        "kiConvert/GaijiChukiConvert/Schemas/Chuki.xsd", IsNullable=false)]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd", IsNullable=false)]
     public partial class dictionary : object, System.ComponentModel.INotifyPropertyChanged {
         
         /// <remarks/>
@@ -44,8 +42,7 @@ namespace GaijiChukiConvert.Schemas {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/aozora2htmlSharp/blob/master/tools/gaiji_chuki/GaijiChu" +
-        "kiConvert/GaijiChukiConvert/Schemas/Chuki.xsd")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd")]
     public partial class dictionaryKanji : object, System.ComponentModel.INotifyPropertyChanged {
         
         /// <remarks/>
@@ -67,10 +64,8 @@ namespace GaijiChukiConvert.Schemas {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/aozora2htmlSharp/blob/master/tools/gaiji_chuki/GaijiChu" +
-        "kiConvert/GaijiChukiConvert/Schemas/Chuki.xsd")]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace="https://github.com/kurema/aozora2htmlSharp/blob/master/tools/gaiji_chuki/GaijiChu" +
-        "kiConvert/GaijiChukiConvert/Schemas/Chuki.xsd", IsNullable=false)]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd", IsNullable=false)]
     public partial class page : object, System.ComponentModel.INotifyPropertyChanged {
         
         /// <remarks/>
@@ -95,8 +90,7 @@ namespace GaijiChukiConvert.Schemas {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/aozora2htmlSharp/blob/master/tools/gaiji_chuki/GaijiChu" +
-        "kiConvert/GaijiChukiConvert/Schemas/Chuki.xsd")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd")]
     public partial class pageRadical : object, System.ComponentModel.INotifyPropertyChanged {
         
         /// <remarks/>
@@ -120,8 +114,7 @@ namespace GaijiChukiConvert.Schemas {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/aozora2htmlSharp/blob/master/tools/gaiji_chuki/GaijiChu" +
-        "kiConvert/GaijiChukiConvert/Schemas/Chuki.xsd")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd")]
     public partial class pageRadicalReadings : object, System.ComponentModel.INotifyPropertyChanged {
         
         /// <remarks/>
@@ -143,10 +136,8 @@ namespace GaijiChukiConvert.Schemas {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/aozora2htmlSharp/blob/master/tools/gaiji_chuki/GaijiChu" +
-        "kiConvert/GaijiChukiConvert/Schemas/Chuki.xsd")]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace="https://github.com/kurema/aozora2htmlSharp/blob/master/tools/gaiji_chuki/GaijiChu" +
-        "kiConvert/GaijiChukiConvert/Schemas/Chuki.xsd", IsNullable=false)]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd", IsNullable=false)]
     public partial class entry : object, System.ComponentModel.INotifyPropertyChanged {
         
         /// <remarks/>
@@ -213,8 +204,7 @@ namespace GaijiChukiConvert.Schemas {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/aozora2htmlSharp/blob/master/tools/gaiji_chuki/GaijiChu" +
-        "kiConvert/GaijiChukiConvert/Schemas/Chuki.xsd")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd")]
     public partial class entryCharacters : object, System.ComponentModel.INotifyPropertyChanged {
         
         /// <remarks/>
@@ -236,8 +226,7 @@ namespace GaijiChukiConvert.Schemas {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/aozora2htmlSharp/blob/master/tools/gaiji_chuki/GaijiChu" +
-        "kiConvert/GaijiChukiConvert/Schemas/Chuki.xsd")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd")]
     public partial class entryCompatible78Inclusion : object, System.ComponentModel.INotifyPropertyChanged {
         
         /// <remarks/>
@@ -259,8 +248,7 @@ namespace GaijiChukiConvert.Schemas {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/aozora2htmlSharp/blob/master/tools/gaiji_chuki/GaijiChu" +
-        "kiConvert/GaijiChukiConvert/Schemas/Chuki.xsd")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd")]
     public partial class entryDesignVariant : object, System.ComponentModel.INotifyPropertyChanged {
         
         /// <remarks/>
@@ -282,8 +270,7 @@ namespace GaijiChukiConvert.Schemas {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/aozora2htmlSharp/blob/master/tools/gaiji_chuki/GaijiChu" +
-        "kiConvert/GaijiChukiConvert/Schemas/Chuki.xsd")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd")]
     public partial class entryInclusionApplication : object, System.ComponentModel.INotifyPropertyChanged {
         
         /// <remarks/>
@@ -310,10 +297,8 @@ namespace GaijiChukiConvert.Schemas {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/aozora2htmlSharp/blob/master/tools/gaiji_chuki/GaijiChu" +
-        "kiConvert/GaijiChukiConvert/Schemas/Chuki.xsd")]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace="https://github.com/kurema/aozora2htmlSharp/blob/master/tools/gaiji_chuki/GaijiChu" +
-        "kiConvert/GaijiChukiConvert/Schemas/Chuki.xsd", IsNullable=false)]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd", IsNullable=false)]
     public partial class note : object, System.ComponentModel.INotifyPropertyChanged {
         
         /// <remarks/>
@@ -342,8 +327,7 @@ namespace GaijiChukiConvert.Schemas {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/aozora2htmlSharp/blob/master/tools/gaiji_chuki/GaijiChu" +
-        "kiConvert/GaijiChukiConvert/Schemas/Chuki.xsd")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd")]
     public partial class noteJisx0213 : object, System.ComponentModel.INotifyPropertyChanged {
         
         /// <remarks/>
@@ -393,8 +377,7 @@ namespace GaijiChukiConvert.Schemas {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/aozora2htmlSharp/blob/master/tools/gaiji_chuki/GaijiChu" +
-        "kiConvert/GaijiChukiConvert/Schemas/Chuki.xsd")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd")]
     public partial class noteUnicode : object, System.ComponentModel.INotifyPropertyChanged {
         
         /// <remarks/>
@@ -416,8 +399,7 @@ namespace GaijiChukiConvert.Schemas {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/aozora2htmlSharp/blob/master/tools/gaiji_chuki/GaijiChu" +
-        "kiConvert/GaijiChukiConvert/Schemas/Chuki.xsd")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd")]
     public partial class entryInclusionApplicationReference : object, System.ComponentModel.INotifyPropertyChanged {
         
         /// <remarks/>
@@ -439,8 +421,7 @@ namespace GaijiChukiConvert.Schemas {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/aozora2htmlSharp/blob/master/tools/gaiji_chuki/GaijiChu" +
-        "kiConvert/GaijiChukiConvert/Schemas/Chuki.xsd")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd")]
     public partial class entryIntegrationApplication : object, System.ComponentModel.INotifyPropertyChanged {
         
         /// <remarks/>
@@ -463,8 +444,7 @@ namespace GaijiChukiConvert.Schemas {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/aozora2htmlSharp/blob/master/tools/gaiji_chuki/GaijiChu" +
-        "kiConvert/GaijiChukiConvert/Schemas/Chuki.xsd")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd")]
     public partial class entryUCV : object, System.ComponentModel.INotifyPropertyChanged {
         
         /// <remarks/>
@@ -484,8 +464,7 @@ namespace GaijiChukiConvert.Schemas {
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/aozora2htmlSharp/blob/master/tools/gaiji_chuki/GaijiChu" +
-        "kiConvert/GaijiChukiConvert/Schemas/Chuki.xsd")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd")]
     public enum entrySupplement {
         
         /// <remarks/>
@@ -503,8 +482,7 @@ namespace GaijiChukiConvert.Schemas {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/aozora2htmlSharp/blob/master/tools/gaiji_chuki/GaijiChu" +
-        "kiConvert/GaijiChukiConvert/Schemas/Chuki.xsd")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd")]
     public partial class pageRadicalCharacters : object, System.ComponentModel.INotifyPropertyChanged {
         
         /// <remarks/>
