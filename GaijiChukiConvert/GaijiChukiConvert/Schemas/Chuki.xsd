@@ -73,9 +73,11 @@
 								<xs:complexType>
 									<xs:sequence>
 										<xs:element name="character" type="xs:string" />
-										<xs:element ref="mstns:note"/>
+										<xs:element ref="mstns:note" minOccurs="0"/>
 										<xs:element name="info" type="xs:string" minOccurs="0"/>
 									</xs:sequence>
+									<xs:attribute name="docPage" type="xs:nonNegativeInteger" default="0" />
+									<xs:attribute name="inputable" use="optional" type="xs:boolean" default="false" />
 									<!--<xs:attribute ref="mstns:supplement"/>-->
 								</xs:complexType>
 							</xs:element>

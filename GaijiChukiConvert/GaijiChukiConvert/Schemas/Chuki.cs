@@ -578,6 +578,21 @@ namespace GaijiChukiConvert.Schemas {
         /// <remarks/>
         public string info;
         
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType="nonNegativeInteger")]
+        [System.ComponentModel.DefaultValueAttribute("0")]
+        public string docPage;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool inputable;
+        
+        public PageOtherEntry() {
+            this.docPage = "0";
+            this.inputable = false;
+        }
+        
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         protected void RaisePropertyChanged(string propertyName) {

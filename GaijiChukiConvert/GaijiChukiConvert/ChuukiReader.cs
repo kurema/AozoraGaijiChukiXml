@@ -14,6 +14,7 @@ public static class ChuukiReader
     private const string NotePattern = @$"※{NotePatternBasic}";
     // language=regex
     private const string NotePatternBasic = @"［＃([^］]+)］";
+    private const string InputableKeyword = "入力可能";
 
     public async static Task<Schemas.dictionary> LoadDictionary(TextReader reader)
     {
@@ -219,7 +220,7 @@ public static class ChuukiReader
 
                 {
                     // language=regex
-                    var regex = @"([^］．\s　]+)[\s　]+入力可能";
+                    var regex = @$"([^］．\s　]+)[\s　]+{InputableKeyword}";
                     var match = Regex.Match(line, regex);
                     if (match.Success)
                     {
@@ -280,6 +281,7 @@ public static class ChuukiReader
             var currentTop = current;
             var otherPages = new List<Schemas.PageOther>();
             var entries = new List<Schemas.PageOtherEntry>();
+            bool skip = false;
 
             while (true)
             {
@@ -289,18 +291,29 @@ public static class ChuukiReader
                 if (line == null) break;
                 if (line.Contains('\f')) pageCnt++;
 
+                if (line.StartsWith("アクセント付きラテン文字（アクセント分解）【その他】に戻る"))
+                {
+                    skip = true;
+                    continue;
+                }
+                else if(line.StartsWith("アクセント付きラテン文字（アクセント分解以外）【その他】に戻る"))
+                {
+                    skip = false;
+                }
+                else if (line.StartsWith("改訂内容目次"))
+                {
+                    current.entries = entries.ToArray();
+                    break;
+                }
+
+                if (skip) continue;
+
                 while (line.Count(a => a == '［') != line.Count(a => a == '］'))
                 {
                     line = Regex.Replace(line, @"[\s　]+$", "");
                     var tmp = await reader.ReadLineAsync();
                     if (tmp?.Contains('\f') == true) pageCnt++;
                     line += tmp;
-                }
-
-                if (line.StartsWith("アクセント付きラテン文字（アクセント分解）【その他】に戻る"))
-                {
-                    current.entries = entries.ToArray();
-                    break;
                 }
 
                 {
@@ -319,7 +332,7 @@ public static class ChuukiReader
                             otherPages.Add(current);
 
                         }
-                        else if (match.Groups[2].Value == currentTop.header)
+                        else if (match.Groups[2].Value == currentTop.header || match.Groups[2].Value is "母音")
                         {
                             current = new Schemas.PageOther()
                             {
@@ -356,6 +369,7 @@ public static class ChuukiReader
                         {
                             note = GetNoteSerializable(match.Groups[3].Value),
                             character = word,
+                            docPage = pageCnt.ToString(),
                         };
 
                         if (!string.IsNullOrEmpty(match.Groups[2].Value)) entry.note.pre = match.Groups[2].Value;
@@ -377,8 +391,12 @@ public static class ChuukiReader
                         var word = match.Groups[1].Value;
                         word = Regex.Replace(word, @"[\s　]", "");
                         word = word.Replace("\x06", "");
+                        word = word.Replace("\x1e", "");
+                        word = word.Replace("\x1f", "");
 
                         var info = match.Groups[3].Value;
+                        bool inputable = info.Contains(InputableKeyword);
+                        info = info.Replace(InputableKeyword, "");
                         info = Regex.Replace(info, @"^[\s　]", "");
                         info = Regex.Replace(info, @"[\s　]$", "");
 
@@ -386,6 +404,8 @@ public static class ChuukiReader
                         {
                             note = GetNoteSerializable(match.Groups[2].Value),
                             character = word,
+                            docPage = pageCnt.ToString(),
+                            inputable=inputable,
                         };
 
                         if (!string.IsNullOrEmpty(info)) entry.info = info;
@@ -398,6 +418,28 @@ public static class ChuukiReader
                     }
                 }
 
+                {
+                    // language=regex
+                    var regex = @$"([^］．\s　]+)[\s　]+{InputableKeyword}";
+                    var match = Regex.Match(line, regex);
+
+                    if (match.Success)
+                    {
+                        var charString = match.Groups[1].Value;
+                        charString = Regex.Replace(charString, @"[\s　]", "");
+                        var chars = EnumerateCharacters(charString);
+                        foreach(var @char in chars)
+                        {
+                            var entry = new Schemas.PageOtherEntry()
+                            {
+                                 character=@char,
+                                  docPage=pageCnt.ToString(),
+                                  inputable=true,
+                            };
+                            entries.Add(entry);
+                        }
+                    }
+                }
 
                 //break;
             }
