@@ -69,11 +69,14 @@
 				<xs:element name="entries">
 					<xs:complexType>
 						<xs:sequence>
-							<xs:element name="entry">
+							<xs:element name="entry" minOccurs="0" maxOccurs="unbounded">
 								<xs:complexType>
 									<xs:sequence>
 										<xs:element name="character" type="xs:string" />
+										<xs:element ref="mstns:note"/>
+										<xs:element name="info" type="xs:string" minOccurs="0"/>
 									</xs:sequence>
+									<!--<xs:attribute ref="mstns:supplement"/>-->
 								</xs:complexType>
 							</xs:element>
 						</xs:sequence>
@@ -152,21 +155,24 @@
 			<xs:attribute name="docPage" type="xs:nonNegativeInteger" default="0" />
 			<xs:attribute type="xs:nonNegativeInteger" name="strokes" />
 			<xs:attribute type="xs:boolean" name="duplicate" default="false" />
-			<xs:attribute name="supplement" default="default">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:enumeration value="supplementOnly" />
-						<xs:enumeration value="supplementCommon" />
-						<xs:enumeration value="default" />
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:attribute>
+			<xs:attribute ref="mstns:supplement"/>
 		</xs:complexType>
 	</xs:element>
+
+	<xs:attribute name="supplement" default="default">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="supplementOnly" />
+				<xs:enumeration value="supplementCommon" />
+				<xs:enumeration value="default" />
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:attribute>
 
 	<xs:element name="note">
 		<xs:complexType>
 			<xs:sequence>
+				<xs:element name="pre" type="xs:string" minOccurs="0"/>
 				<xs:element name="full" type="xs:string"/>
 				<xs:element name="description" type="xs:string"/>
 				<xs:choice minOccurs="0">

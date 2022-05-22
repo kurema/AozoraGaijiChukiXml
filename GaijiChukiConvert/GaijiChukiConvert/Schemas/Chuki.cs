@@ -27,6 +27,9 @@ namespace GaijiChukiConvert.Schemas {
         /// <remarks/>
         public dictionaryKanji kanji;
         
+        /// <remarks/>
+        public dictionaryOther other;
+        
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         protected void RaisePropertyChanged(string propertyName) {
@@ -178,9 +181,13 @@ namespace GaijiChukiConvert.Schemas {
         public bool duplicate;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute(Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
         [System.ComponentModel.DefaultValueAttribute(entrySupplement.@default)]
         public entrySupplement supplement;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool supplementSpecified;
         
         public entry() {
             this.refPage = "0";
@@ -300,6 +307,9 @@ namespace GaijiChukiConvert.Schemas {
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd")]
     [System.Xml.Serialization.XmlRootAttribute(Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd", IsNullable=false)]
     public partial class note : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        /// <remarks/>
+        public string pre;
         
         /// <remarks/>
         public string full;
@@ -488,6 +498,85 @@ namespace GaijiChukiConvert.Schemas {
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("character")]
         public string[] character;
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd")]
+    public partial class dictionaryOther : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("PageOther")]
+        public PageOther[] PageOther;
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd", IsNullable=false)]
+    public partial class PageOther : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        /// <remarks/>
+        public string header;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("PageOther")]
+        public PageOther[] PageOther1;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayItemAttribute("entry", IsNullable=false)]
+        public PageOtherEntry[] entries;
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd")]
+    public partial class PageOtherEntry : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        /// <remarks/>
+        public string character;
+        
+        /// <remarks/>
+        public note note;
+        
+        /// <remarks/>
+        public string info;
         
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         

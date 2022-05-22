@@ -10,7 +10,10 @@ namespace GaijiChukiConvert;
 
 public static class ChuukiReader
 {
-    private const string NotePattern = @"※［＃([^］]+)］";
+    // language=regex
+    private const string NotePattern = @$"※{NotePatternBasic}";
+    // language=regex
+    private const string NotePatternBasic = @"［＃([^］]+)］";
 
     public async static Task<Schemas.dictionary> LoadDictionary(TextReader reader)
     {
@@ -267,18 +270,21 @@ public static class ChuukiReader
                     if (line.Contains("補助のみ")) current.supplement = Schemas.entrySupplement.supplementOnly;
                     if (line.Contains("補助漢字と共通")) current.supplement = Schemas.entrySupplement.supplementCommon;
                 }
-
             }
 
             result.kanji = new Schemas.dictionaryKanji() { page = pages.ToArray() };
         }
 
         {
-            string currentHeader = string.Empty;
+            var current = new Schemas.PageOther();
+            var currentTop = current;
+            var otherPages = new List<Schemas.PageOther>();
+            var entries = new List<Schemas.PageOtherEntry>();
 
             while (true)
             {
                 var line = nextLine ?? await reader.ReadLineAsync();
+                nextLine = null;
 
                 if (line == null) break;
                 if (line.Contains('\f')) pageCnt++;
@@ -291,10 +297,112 @@ public static class ChuukiReader
                     line += tmp;
                 }
 
-                if (line.StartsWith("アクセント付きラテン文字（アクセント分解）【その他】に戻る")) break;
+                if (line.StartsWith("アクセント付きラテン文字（アクセント分解）【その他】に戻る"))
+                {
+                    current.entries = entries.ToArray();
+                    break;
+                }
 
-                break;
+                {
+                    var match = Regex.Match(line, @"^(.+)【(.+?)(?:目次)?】に戻る");
+                    if (match.Success)
+                    {
+                        current.entries = entries.ToArray();
+                        entries = new();
+
+                        if (match.Groups[2].Value == "その他")
+                        {
+                            currentTop = current = new Schemas.PageOther()
+                            {
+                                header = match.Groups[1].Value,
+                            };
+                            otherPages.Add(current);
+
+                        }
+                        else if (match.Groups[2].Value == currentTop.header)
+                        {
+                            current = new Schemas.PageOther()
+                            {
+                                header = match.Groups[1].Value,
+                            };
+
+                            {
+                                var list = (currentTop.PageOther1?.ToList() ?? new());
+                                list.Add(current);
+                                currentTop.PageOther1 = list.ToArray();
+                            }
+                        }
+                        else
+                        {
+                            throw new NotImplementedException();
+                        }
+                    }
+                }
+
+                {
+                    var match = Regex.Match(line, @$"^(.+?)(（.+）)[\s\t]*{NotePatternBasic}(.*)$");
+
+                    if (match.Success)
+                    {
+                        if (match.Groups[2].Value is not "（例）") continue;
+
+                        var word = match.Groups[1].Value;
+                        word = Regex.Replace(word, @"[\s　]", "");
+
+                        var info = match.Groups[4].Value;
+                        info = Regex.Replace(info, @"[\s　]", "");
+
+                        var entry = new Schemas.PageOtherEntry()
+                        {
+                            note = GetNoteSerializable(match.Groups[3].Value),
+                            character = word,
+                        };
+
+                        if (!string.IsNullOrEmpty(match.Groups[2].Value)) entry.note.pre = match.Groups[2].Value;
+                        if (!string.IsNullOrEmpty(info)) entry.info = info;
+
+                        entries.Add(entry);
+
+                        nextLine = line.Replace(match.Value, "");
+
+                        continue;
+                    }
+                }
+
+                {
+                    var match = Regex.Match(line, @$"^(.+?)[\s\t]*{NotePattern}(.*)$");
+
+                    if (match.Success)
+                    {
+                        var word = match.Groups[1].Value;
+                        word = Regex.Replace(word, @"[\s　]", "");
+                        word = word.Replace("\x06", "");
+
+                        var info = match.Groups[3].Value;
+                        info = Regex.Replace(info, @"^[\s　]", "");
+                        info = Regex.Replace(info, @"[\s　]$", "");
+
+                        var entry = new Schemas.PageOtherEntry()
+                        {
+                            note = GetNoteSerializable(match.Groups[2].Value),
+                            character = word,
+                        };
+
+                        if (!string.IsNullOrEmpty(info)) entry.info = info;
+
+                        entries.Add(entry);
+
+                        nextLine = line.Replace(match.Value, "");
+
+                        continue;
+                    }
+                }
+
+
+                //break;
             }
+
+            result.other = new Schemas.dictionaryOther() { PageOther = otherPages.ToArray() };
         }
 
         return result;
@@ -353,6 +461,23 @@ public static class ChuukiReader
                     ku = int.Parse(match.Groups[3].Value),
                     tenSpecified = true,
                     ten = int.Parse(match.Groups[4].Value),
+                };
+            }
+        }
+        {
+            var match = Regex.Match(text, @"^(\d)+\-(\d+)-(\d+)");
+            if (match.Success)
+            {
+                return new Schemas.noteJisx0213()
+                {
+                    levelSpecified = true,
+                    level = 0,
+                    menSpecified = true,
+                    men = int.Parse(match.Groups[1].Value),
+                    kuSpecified = true,
+                    ku = int.Parse(match.Groups[2].Value),
+                    tenSpecified = true,
+                    ten = int.Parse(match.Groups[3].Value),
                 };
             }
         }
