@@ -45,19 +45,25 @@ public static class ChuukiReader
                 while (line.Count(a => a == '［') != line.Count(a => a == '］'))
                 {
                     line = Regex.Replace(line, @"[\s　]+$", "");
-                    line += await reader.ReadLineAsync();
+                    var tmp = await reader.ReadLineAsync();
+                    if (tmp?.Contains('\f') == true) pageCnt++;
+                    line += tmp;
                 }
 
                 //while (line.Contains('【') && !line.Contains('】'))
                 while (line.Count(a => a == '【') != line.Count(a => a == '】'))
                 {
                     line = Regex.Replace(line, @"[\s　]+$", "");
-                    line += await reader.ReadLineAsync();
+                    var tmp = await reader.ReadLineAsync();
+                    if (tmp?.Contains('\f') == true) pageCnt++;
+                    line += tmp;
                 }
                 if (line.Contains("包摂適用"))
                 {
                     line = Regex.Replace(line, @"[\s　]+$", "");
-                    line += await reader.ReadLineAsync();
+                    var tmp = await reader.ReadLineAsync();
+                    if (tmp?.Contains('\f') == true) pageCnt++;
+                    line += tmp;
                 }
 
                 if (line.Contains('\f')) pageCnt++;
@@ -268,12 +274,24 @@ public static class ChuukiReader
         }
 
         {
+            string currentHeader = string.Empty;
+
             while (true)
             {
                 var line = nextLine ?? await reader.ReadLineAsync();
 
                 if (line == null) break;
                 if (line.Contains('\f')) pageCnt++;
+
+                while (line.Count(a => a == '［') != line.Count(a => a == '］'))
+                {
+                    line = Regex.Replace(line, @"[\s　]+$", "");
+                    var tmp = await reader.ReadLineAsync();
+                    if (tmp?.Contains('\f') == true) pageCnt++;
+                    line += tmp;
+                }
+
+                if (line.StartsWith("アクセント付きラテン文字（アクセント分解）【その他】に戻る")) break;
 
                 break;
             }

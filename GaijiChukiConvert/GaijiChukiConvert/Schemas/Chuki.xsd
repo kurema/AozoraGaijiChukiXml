@@ -19,7 +19,7 @@
 				<xs:element name="other">
 					<xs:complexType>
 						<xs:sequence minOccurs="0" maxOccurs="unbounded">
-							<xs:element ref="mstns:page" />
+							<xs:element ref="mstns:PageOther" />
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
@@ -55,6 +55,28 @@
 						<xs:choice minOccurs="0" maxOccurs="unbounded">
 							<xs:element ref="mstns:entry" />
 						</xs:choice>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="PageOther">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="header" type="xs:string"/>
+				<xs:element ref="mstns:PageOther" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element name="entries">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="entry">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="character" type="xs:string" />
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
 			</xs:sequence>
