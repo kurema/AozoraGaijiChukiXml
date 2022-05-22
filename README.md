@@ -1,6 +1,6 @@
 # AozoraGaijiChukiXml
 [青空文庫・外字注記辞書【第八版】](https://www.aozora.gr.jp/gaiji_chuki/)のXML形式です。
-独自に定義したXML形式に、PDFから独自に変換したものです。
+PDFから独自に定義したXML形式に変換したものです。
 
 ## ファイル
 | パス | 説明 |
@@ -9,6 +9,17 @@
 | [data/Chuki.xsd](data/Chuki.xsd) | XML Schemaファイル |
 | [doc/original](doc/original) | 変換元ファイル |
 | [GaijiChukiConvert](GaijiChukiConvert) | 変換用ツール (C#) |
+
+### XML Schemaについて
+プログラミング言語によっては、XML Schemaからソースコードを作成できる場合があります。
+
+Visual Studioの場合、`xsd.exe`でC#ソースコードが出力されます。
+デシリアライズすることでインスタンスとして扱えるので便利です。
+
+```
+$ cd GaijiChukiConvert\Schemas
+$ xsd.exe /parameters:xsdParam.xml
+```
 
 ## 注意点
 いくつか不正確な点があるのであくまで参考として扱ってください。
@@ -68,6 +79,10 @@ PDF作成時に複数文字の組み合わせで表現した文字があるよ�
 #### 例4: 字形
 PDF上でフォントの指定などで表現されている字形の違いが、XML上では同一の文字として表現されています。
 
+### その他
+その他バグや不完全な部分が存在するかもしれません。
+参考程度と考えてください。
+
 ## 作成手順
 1. PDFファイルをAdobe Readerで開き、「ファイル (F)」→「テキストとして保存 (V)」
 2. テキストファイルの編集 (最低限)。
@@ -81,6 +96,15 @@ PDF上でフォントの指定などで表現されている字形の違いが�
 * 「丸付き片仮名」に改行挿入。
   * こちらは変換プログラムで対処するのが面倒だったため。
   * 今後の改訂を考えれば望ましくない。
+
+## GaijiChukiConvertの使い方
+```
+$ GaijiChukiConvert gaiji_chuki.txt out.xml
+```
+
+第1引数に変換元ファイル(普通はgaiji_chuki.txt)、第2引数に返還後のファイル名を指定してください。
+
+デバッグビルドで実行する場合は[Program.cs](GaijiChukiConvert/GaijiChukiConvert/Program.cs)を適宜編集してください。
 
 # ライセンス
 CC0 1.0
