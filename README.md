@@ -51,7 +51,7 @@ PDF作成時に複数文字の組み合わせで表現した文字があるよ�
 > 7．冫良※［＃「冫＋良」、ページ数-行数］
 
 ```xml
-        <entry docPage="19" strokes="7" duplicate="true">
+        <entry docPage="19" strokes="7">
           <characters>
             <character>冫</character>
             <character>良</character>
