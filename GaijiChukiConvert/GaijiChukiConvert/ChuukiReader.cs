@@ -38,6 +38,7 @@ public static class ChuukiReader
             List<Schemas.entry> entries = new();
             Schemas.page? page = null;
             List<Schemas.page> pages = new();
+            bool duplicate = false;
 
             while (true)
             {
@@ -95,7 +96,8 @@ public static class ChuukiReader
                         {
                             entries.Add(current);
                         }
-                        current = new Schemas.entry() { docPage = pageCnt.ToString(), characters = new Schemas.entryCharacters() };
+                        current = new Schemas.entry() { docPage = pageCnt.ToString(), characters = new Schemas.entryCharacters(), duplicate = duplicate };
+                        duplicate = false;
                         current.strokes = match.Groups[1].Value;
                     }
                 }
@@ -267,7 +269,7 @@ public static class ChuukiReader
                 }
 
                 {
-                    if (line.Contains('★')) current.duplicate = true;
+                    if (line.Contains('★')) duplicate = true;
                     if (line.Contains("補助のみ")) current.supplement = Schemas.entrySupplement.supplementOnly;
                     if (line.Contains("補助漢字と共通")) current.supplement = Schemas.entrySupplement.supplementCommon;
                 }
@@ -296,7 +298,7 @@ public static class ChuukiReader
                     skip = true;
                     continue;
                 }
-                else if(line.StartsWith("アクセント付きラテン文字（アクセント分解以外）【その他】に戻る"))
+                else if (line.StartsWith("アクセント付きラテン文字（アクセント分解以外）【その他】に戻る"))
                 {
                     skip = false;
                 }
@@ -405,7 +407,7 @@ public static class ChuukiReader
                             note = GetNoteSerializable(match.Groups[2].Value),
                             character = word,
                             docPage = pageCnt.ToString(),
-                            inputable=inputable,
+                            inputable = inputable,
                         };
 
                         if (!string.IsNullOrEmpty(info)) entry.info = info;
@@ -428,13 +430,13 @@ public static class ChuukiReader
                         var charString = match.Groups[1].Value;
                         charString = Regex.Replace(charString, @"[\s　]", "");
                         var chars = EnumerateCharacters(charString);
-                        foreach(var @char in chars)
+                        foreach (var @char in chars)
                         {
                             var entry = new Schemas.PageOtherEntry()
                             {
-                                 character=@char,
-                                  docPage=pageCnt.ToString(),
-                                  inputable=true,
+                                character = @char,
+                                docPage = pageCnt.ToString(),
+                                inputable = true,
                             };
                             entries.Add(entry);
                         }
