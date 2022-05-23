@@ -72,7 +72,7 @@ PDF作成時に複数文字の組み合わせで表現した文字があるよ�
 
 以下に例示します。
 
-![image](https://user-images.githubusercontent.com/10556974/169720115-d815bc50-fec1-4e9e-9902-2813ef8a937d.png)
+![スクリーンショット](doc/img/ss2.png)
 
 > ø 　※［＃下書きのι付きα、U+1FB3、ページ数-行数］
 
