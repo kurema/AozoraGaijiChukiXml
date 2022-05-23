@@ -88,7 +88,7 @@ PDF上でフォントの指定などで表現されている字形の違いが�
 2. テキストファイルの編集 (最低限)。
 3. [GaijiChukiConvert](GaijiChukiConvert)で変換。
 
-テキストファイルの編集は変換が最低限です([差分](doc/original/gaiji_chuki.diff.txt))。
+テキストファイルの編集は以下程度です([差分](doc/original/gaiji_chuki.diff.txt))。
 
 * `※［＃...］`注釈を含む例示。
   * 削除しないと変換プログラムが複雑になるため。
