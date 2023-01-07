@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Aozora.GaijiChuki</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Chuki.gz" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Chuki.gz" />
+  </ItemGroup>
+
+</Project>
