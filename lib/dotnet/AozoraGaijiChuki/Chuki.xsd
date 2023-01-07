@@ -23,6 +23,27 @@
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
+				<xs:element name="toc">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="strokesToRadical">
+								<xs:complexType>
+									<xs:sequence minOccurs="0" maxOccurs="unbounded">
+										<xs:element name="strokes">
+											<xs:complexType>
+												<xs:simpleContent>
+													<xs:extension base="xs:string">
+														<xs:attribute name="stroke" type="xs:int"/>
+													</xs:extension>
+												</xs:simpleContent>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>

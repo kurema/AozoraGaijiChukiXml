@@ -5,6 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>Aozora.GaijiChuki</RootNamespace>
+	<LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

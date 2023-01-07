@@ -28,6 +28,8 @@ namespace Aozora.GaijiChuki.Xsd {
         
         private dictionaryOther otherField;
         
+        private dictionaryToc tocField;
+        
         /// <remarks/>
         public dictionaryKanji kanji {
             get {
@@ -45,6 +47,16 @@ namespace Aozora.GaijiChuki.Xsd {
             }
             set {
                 this.otherField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public dictionaryToc toc {
+            get {
+                return this.tocField;
+            }
+            set {
+                this.tocField = value;
             }
         }
     }
@@ -860,6 +872,97 @@ namespace Aozora.GaijiChuki.Xsd {
             }
             set {
                 this.inputableField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd")]
+    public partial class dictionaryToc {
+        
+        private dictionaryTocStrokesToRadical strokesToRadicalField;
+        
+        /// <remarks/>
+        public dictionaryTocStrokesToRadical strokesToRadical {
+            get {
+                return this.strokesToRadicalField;
+            }
+            set {
+                this.strokesToRadicalField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd")]
+    public partial class dictionaryTocStrokesToRadical {
+        
+        private dictionaryTocStrokesToRadicalStrokes[] strokesField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("strokes")]
+        public dictionaryTocStrokesToRadicalStrokes[] strokes {
+            get {
+                return this.strokesField;
+            }
+            set {
+                this.strokesField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.8.3928.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="https://github.com/kurema/AozoraGaijiChukiXml/blob/master/data/Chuki.xsd")]
+    public partial class dictionaryTocStrokesToRadicalStrokes {
+        
+        private int strokeField;
+        
+        private bool strokeFieldSpecified;
+        
+        private string valueField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public int stroke {
+            get {
+                return this.strokeField;
+            }
+            set {
+                this.strokeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool strokeSpecified {
+            get {
+                return this.strokeFieldSpecified;
+            }
+            set {
+                this.strokeFieldSpecified = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlTextAttribute()]
+        public string Value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
             }
         }
     }

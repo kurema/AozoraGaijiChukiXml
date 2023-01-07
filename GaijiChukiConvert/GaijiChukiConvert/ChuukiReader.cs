@@ -15,11 +15,37 @@ public static class ChuukiReader
     // language=regex
     private const string NotePatternBasic = @"［＃([^］]+)］";
     private const string InputableKeyword = "入力可能";
+    static string[] StrokesFirst = new[]
+    {
+        "一","二","口","心","玄","竹","見","金","面","馬","魚","黃","黽","鼻","齒","龍","龠",
+    };
+    static string[] StrokesAll = new[]
+    {
+        "一丨丶丿乚乙",
+        "二亠人亻𠆢儿入八冂冖冫風⺇几凵刀刂力勹匕匚匸十卜卩厂厶又",
+        "口囗土士夂夊夕大女子孑宀寸小尢兀尸屮屮山巛川工己已巳巾干广廴廾弋弓彑彡彳忄扌氵丬爿犭艹艸⻌辶辵阝邑阝阜",
+        "心⺗戈戸手支攴攵文斗斤方无旡日曰月木欠止歹歺殳毋母比毛氏气水氺火灬爪爫⺤父爻爿丬片牙牛犬尣王玉礻示㓁耂老艹艸⻌辶辵",
+        "玄玉王瓜瓦甘生用田疋⺪疒癶白皮皿目矛矢石示礻禸禾穴立旡歺歹母毋氺水牙罒𦉰衤",
+        "竹米糸缶网羊⺷羽老耂而耒耳聿肉臣自至臼⺽舌舛舟艮色艸艹虍虫血行衣西襾覀瓜",
+        "見角言谷豆豕豸貝赤走足⻊身車辛辰辵⻌辶阝邑酉釆里臣⺽臼麦麥",
+        "金長門阜阝隹雨青非⻞飠食鼡鼠斉齊",
+        "面革韋韭音頁風飛食⻞飠首香",
+        "馬骨高髟鬥鬲鬼韋竜龍",
+        "魚鳥鹵鹿麥麦麻黄黃黒黑亀龜",
+        "黃黄黑黒歯齒",
+        "黽鼎鼓鼠鼡",
+        "鼻齊斉",
+        "齒歯",
+        "龍竜龜亀",
+        "龠",
+    };
+
 
     public async static Task<Schemas.dictionary> LoadDictionary(TextReader reader)
     {
 
         int pageCnt = 1;
+        int radicalStrokes = 0;
 
         while (true)
         {
@@ -109,6 +135,10 @@ public static class ChuukiReader
                         string r = match.Groups[1].Value;
                         r = new Regex(@"[\s　]").Replace(r, "");
                         string c = match.Groups[2].Value;
+                        if (c.Contains(StrokesFirst[radicalStrokes])) radicalStrokes++;
+                        //全ては確認していないが、概ね画数順っぽい。
+                        //ただし索引は複数の画数で参照している場合がある。(例：風は2画と9画)
+                        //Console.WriteLine($"{radicalStrokes} {c}");
                         if (page is not null)
                         {
                             if (current is not null) entries.Add(current);
@@ -121,7 +151,8 @@ public static class ChuukiReader
                         page.radical = new Schemas.pageRadical()
                         {
                             readings = new Schemas.pageRadicalReadings() { reading = r.Split('・') },
-                            characters = new Schemas.pageRadicalCharacters() { character = EnumerateCharacters(c) }
+                            characters = new Schemas.pageRadicalCharacters() { character = EnumerateCharacters(c) },
+                            //strokes = radicalStrokes,
                         };
                         continue;
                     }
@@ -450,6 +481,19 @@ public static class ChuukiReader
         }
 
         return result;
+    }
+
+    public static void AppendTocInfo(Schemas.dictionary dictionary)
+    {
+        int i = 1;
+        var list = new List<Schemas.dictionaryTocStrokesToRadicalStrokes>();
+        foreach(var item in StrokesAll)
+        {
+            list.Add(new Schemas.dictionaryTocStrokesToRadicalStrokes() { stroke = i, strokeSpecified = true, Value = item });
+            i++;
+        }
+        dictionary.toc = new() { strokesToRadical = new() };
+        dictionary.toc.strokesToRadical.strokes = list.ToArray();
     }
 
     public static Schemas.note GetNoteSerializable(string text)
