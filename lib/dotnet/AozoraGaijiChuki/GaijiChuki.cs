@@ -1,4 +1,5 @@
 ﻿//using Aozora.GaijiChuki.Xsd;
+using System;
 using System.Collections.ObjectModel;
 using System.Reflection;
 
@@ -8,6 +9,10 @@ public static class Manager
 {
     //中身は普通に書き換え可能。書き換えないでください。
     public static Xsd.dictionary? Instance { get; private set; }
+
+    public static Xsd.dictionary? GetContentOrLoad() => Instance ??= LoadContent();
+    public static async Task<Xsd.dictionary?> GetContentOrLoadAsync() => Instance ??= await LoadContentAsync().ConfigureAwait(false);
+
     public static Xsd.dictionary? LoadContent()
     {
         //if (Instance is not null) return Instance;
@@ -31,8 +36,32 @@ public static class Manager
     {
         //ところでfieldキーワードはC# 12に延長。
         //https://github.com/dotnet/csharplang/issues/140#issuecomment-1209645505
-        static ReadOnlyDictionary<string, Xsd.page>? _Radicals;
-        public static ReadOnlyDictionary<string, Xsd.page>? Radicals 
-            => _Radicals ??= Instance?.kanji.page.SelectMany(a => a.radical.characters.character.Select(b => (b, a))).ToDictionary(a => a.b, a => a.a).AsReadOnly();
+        static ReadOnlyDictionary<string, Xsd.page[]>? _RadicalCharacters;
+        public static ReadOnlyDictionary<string, Xsd.page[]>? RadicalCharacters
+            => _RadicalCharacters ??= Instance?.kanji.page.SelectMany(a => a.radical.characters.character.Select(b => (b, a))).GroupBy(a => a.b).ToDictionary(a => a.Key, a => a.Select(c => c.a).ToArray()).AsReadOnly();
+
+        public static ReadOnlyMemory<ReadOnlyMemory<Xsd.page>>? _RadicalFromStroke;
+
+        public static ReadOnlyMemory<ReadOnlyMemory<Xsd.page>>? RadicalFromStroke
+        {
+            get
+            {
+                if (_RadicalFromStroke is not null) return _RadicalFromStroke;
+                if (Instance is null) return null;
+                var result = new List<Xsd.page>[Instance.toc.strokesToRadical.strokes.Length + 1];
+                for (int i = 0; i < result.Length; i++) result[i] = new List<Xsd.page>();
+                foreach (var item in Instance.kanji.page)
+                {
+                    foreach (var item3 in Instance.toc.strokesToRadical.strokes)
+                    {
+                        if (item.radical.characters.character.Any(item3.Value.Contains))
+                        {
+                            result[item3.stroke].Add(item);
+                        }
+                    }
+                }
+                return _RadicalFromStroke = new ReadOnlyMemory<ReadOnlyMemory<Xsd.page>>(result.Select(a => new ReadOnlyMemory<Xsd.page>(a.ToArray())).ToArray());
+            }
+        }
     }
 }
