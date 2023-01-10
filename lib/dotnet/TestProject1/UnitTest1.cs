@@ -18,5 +18,6 @@ public class UnitTest1
 
         //var r1 = Aozora.GaijiChuki.Manager.Toc.RadicalFromStroke;
         //var r2 = Aozora.GaijiChuki.Manager.Toc.RadicalCharacters;
+        //var r3 = Aozora.GaijiChuki.Manager.Toc.RadicalFromReadings;
     }
 }

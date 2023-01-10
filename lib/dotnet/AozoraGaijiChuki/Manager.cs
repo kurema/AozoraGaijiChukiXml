@@ -36,13 +36,13 @@ public static class Manager
     {
         //ところでfieldキーワードはC# 12に延長。
         //https://github.com/dotnet/csharplang/issues/140#issuecomment-1209645505
-        static ReadOnlyDictionary<string, Xsd.page[]>? _RadicalCharacters;
-        public static ReadOnlyDictionary<string, Xsd.page[]>? RadicalCharacters
-            => _RadicalCharacters ??= Instance?.kanji.page.SelectMany(a => a.radical.characters.character.Select(b => (b, a))).GroupBy(a => a.b).ToDictionary(a => a.Key, a => a.Select(c => c.a).ToArray()).AsReadOnly();
+        static ReadOnlyDictionary<string, ReadOnlyMemory<Xsd.page>>? _RadicalCharacters;
+        public static ReadOnlyDictionary<string, ReadOnlyMemory<Xsd.page>>? RadicalCharacters
+            => _RadicalCharacters ??= Instance?.kanji.page.SelectMany(a => a.radical.characters.character.Select(b => (b, a))).GroupBy(a => a.b).ToDictionary(a => a.Key, a => new ReadOnlyMemory<Xsd.page>(a.Select(c => c.a).ToArray())).AsReadOnly();
 
-        public static ReadOnlyMemory<ReadOnlyMemory<Xsd.page>>? _RadicalFromStroke;
+        private static Xsd.page[][]? _RadicalFromStroke;
 
-        public static ReadOnlyMemory<ReadOnlyMemory<Xsd.page>>? RadicalFromStroke
+        public static Xsd.page[][]? RadicalFromStroke
         {
             get
             {
@@ -60,7 +60,23 @@ public static class Manager
                         }
                     }
                 }
-                return _RadicalFromStroke = new ReadOnlyMemory<ReadOnlyMemory<Xsd.page>>(result.Select(a => new ReadOnlyMemory<Xsd.page>(a.ToArray())).ToArray());
+                return _RadicalFromStroke = result.Select(a => a.ToArray()).ToArray();
+            }
+        }
+
+        private static (string, Xsd.page)[]? _RadicalFromReadings;
+
+        public static (string, Xsd.page)[]? RadicalFromReadings
+        {
+            get
+            {
+                return _RadicalFromReadings ??= gen();
+
+                static (string, Xsd.page)[]? gen()
+                {
+                    if (Instance is null) return null;
+                    return Instance.kanji.page.SelectMany(page => page.radical.readings.reading.Select(reading => (reading, page))).OrderBy(a => a.reading).ToArray();
+                }
             }
         }
     }
