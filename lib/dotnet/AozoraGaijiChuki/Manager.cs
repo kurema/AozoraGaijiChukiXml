@@ -44,7 +44,7 @@ public static class Manager
 			{
 				var result = Instance?.kanji.page.SelectMany(a => a.radical.characters.character.Select(b => (b, a))).GroupBy(a => a.b).ToDictionary(a => a.Key, a => new ReadOnlyMemory<Xsd.page>(a.Select(c => c.a).ToArray()));
 				if (result is null) return null;
-				return new ReadOnlyDictionary<string, ReadOnlyMemory<Xsd.page>>(new SortedList<string, ReadOnlyMemory<Xsd.page>>(result));
+				return new ReadOnlyDictionary<string, ReadOnlyMemory<Xsd.page>>(new SortedList<string, ReadOnlyMemory<Xsd.page>>(result, StringComparer.Ordinal));
 			}
 		}
 
