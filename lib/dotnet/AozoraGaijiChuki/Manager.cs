@@ -87,5 +87,15 @@ public static class Manager
 				}
 			}
 		}
+
+		public static int GetStrokeCount(string radical)
+		{
+			if (Instance?.toc?.strokesToRadical?.strokes is null) return -1;
+			foreach (var item in Instance.toc.strokesToRadical.strokes)
+			{
+				if (item.Value.Contains(radical)) return item.strokeSpecified ? item.stroke : -1;
+			}
+			return -1;
+		}
 	}
 }
