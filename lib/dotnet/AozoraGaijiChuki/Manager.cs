@@ -98,4 +98,27 @@ public static class Manager
 			return -1;
 		}
 	}
+
+	public static class Tools
+	{
+		public static string? GetStrokesText(Xsd.entry entry, Xsd.page? page)
+		{
+			var (totals, other) = GetStrokes(entry, page);
+			if (other < 0 || totals.Length == 0) return null;
+			return string.Join(" / ", totals.GroupBy(a => a.total).Select(a => $"{a.Key}画 ({string.Join("", a.Select(a => a.radicalChar))}{a.FirstOrDefault().radical}+{other})"));
+		}
+
+		public static ((string radicalChar, int total, int radical)[], int other) GetStrokes(Xsd.entry entry, Xsd.page? page)
+		{
+			if (!int.TryParse(entry.strokes, out var strokes)) strokes = -1;
+			if (page is null)
+			{
+				page = Manager.Instance?.kanji.page.FirstOrDefault(a => a.entries.Contains(entry));
+				if (page is null) return (Array.Empty<(string, int, int)>(), strokes);
+			}
+			var strokesRadical = page.radical.characters.character.Select(chr => (chr, Toc.GetStrokeCount(chr))).Where(a => a.Item2 >= 0).ToArray();
+			if (strokes < 0) return (strokesRadical.Select(a => (a.chr, -1, a.Item2)).ToArray(), strokes);
+			return (strokesRadical.Select(a => (a.chr, a.Item2 + strokes, a.Item2)).ToArray(), strokes);
+		}
+	}
 }
