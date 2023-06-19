@@ -14,7 +14,7 @@ public static class Manager
 	public static Xsd.dictionary? GetContentOrLoad() => Instance ??= LoadContent();
 	public static async Task<Xsd.dictionary?> GetContentOrLoadAsync() => Instance ??= await LoadContentAsync().ConfigureAwait(false);
 
-	public static Xsd.dictionary? LoadContent()
+	static Xsd.dictionary? LoadContent()
 	{
 		//if (Instance is not null) return Instance;
 		using var stream = Assembly.GetAssembly(typeof(Manager))?.GetManifestResourceStream("Aozora.GaijiChuki.Chuki.gz");
@@ -31,7 +31,7 @@ public static class Manager
 		}
 	}
 
-	public static async Task<Xsd.dictionary?> LoadContentAsync() => await Task.Run(LoadContent).ConfigureAwait(false);
+	static async Task<Xsd.dictionary?> LoadContentAsync() => await Task.Run(LoadContent).ConfigureAwait(false);
 
 	public static class Toc
 	{
@@ -97,6 +97,33 @@ public static class Manager
 			}
 			return -1;
 		}
+
+		static ReadOnlyDictionary<int, ReadOnlyMemory<(Xsd.entry, Xsd.page)>>? _StrokeCharacters;
+
+		public static ReadOnlyDictionary<int, ReadOnlyMemory<(Xsd.entry entry,Xsd.page page)>>? StrokeCharacters
+		{
+			get
+			{
+				if (_StrokeCharacters is not null) return _StrokeCharacters;
+				if (Instance is null) return null;
+				var dic = new Dictionary<int, List<(Xsd.entry, Xsd.page)>>();
+				foreach (var p in Instance.kanji.page)
+				{
+					var strokes = p.radical.characters.character.Select(GetStrokeCount).Where(a => a >= 0).GroupBy(a => a).Select(a => a.First()).ToArray();
+					foreach (var c in p.entries)
+					{
+						if (!int.TryParse(c.strokes, out int stroke)) continue;
+						foreach (var s in strokes)
+						{
+							var ss = s + stroke;
+							if (dic.TryGetValue(ss, out var l)) l.Add((c,p));
+							else dic.Add(ss, new List<(Xsd.entry, Xsd.page)> { (c, p) });
+						}
+					}
+				}
+				return _StrokeCharacters = dic.ToDictionary(a => a.Key, a => new ReadOnlyMemory<(Xsd.entry, Xsd.page)>((a.Value.ToArray()))).AsReadOnly();
+			}
+		}
 	}
 
 	public static class Tools
@@ -113,7 +140,7 @@ public static class Manager
 			if (!int.TryParse(entry.strokes, out var strokes)) strokes = -1;
 			if (page is null)
 			{
-				page = Manager.Instance?.kanji.page.FirstOrDefault(a => a.entries.Contains(entry));
+				page = Instance?.kanji.page.FirstOrDefault(a => a.entries.Contains(entry));
 				if (page is null) return (Array.Empty<(string, int, int)>(), strokes);
 			}
 			var strokesRadical = page.radical.characters.character.Select(chr => (chr, Toc.GetStrokeCount(chr))).Where(a => a.Item2 >= 0).ToArray();
