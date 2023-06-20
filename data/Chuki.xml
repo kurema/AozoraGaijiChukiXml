@@ -21038,21 +21038,16 @@
         </entry>
         <entry docPage="48" strokes="5">
           <characters>
-            <character>1</character>
-            <character>-</character>
-            <character>9</character>
-            <character>4</character>
-            <character>-</character>
-            <character>9</character>
-            <character>2</character>
+            <character>幷</character>
           </characters>
           <inclusionApplication>
             <character>并</character>
             <reference page="97" />
           </inclusionApplication>
           <note>
-            <full>「餠のつくり」</full>
+            <full>「餠のつくり」、第3水準1-94-92</full>
             <description>「餠のつくり」</description>
+            <jisx0213 level="3" men="1" ku="94" ten="92" />
           </note>
         </entry>
         <entry docPage="48" strokes="5" duplicate="true">
