@@ -35,6 +35,8 @@ public static class Manager
 
 	public static class Toc
 	{
+		public static IEnumerable<(Xsd.entry entry, Xsd.page page)> AllKanjiEntries => Instance?.kanji?.page?.SelectMany(a => a.entries.Select(b => (b, a))) ?? new (Xsd.entry entry, Xsd.page page)[0];
+
 		//ところでfieldキーワードはC# 12に延長。
 		//https://github.com/dotnet/csharplang/issues/140#issuecomment-1209645505
 		static ReadOnlyDictionary<string, ReadOnlyMemory<Xsd.page>>? _RadicalCharacters;
@@ -42,9 +44,10 @@ public static class Manager
 		{
 			get
 			{
+				if (_RadicalCharacters is not null) return _RadicalCharacters;
 				var result = Instance?.kanji.page.SelectMany(a => a.radical.characters.character.Select(b => (b, a))).GroupBy(a => a.b).ToDictionary(a => a.Key, a => new ReadOnlyMemory<Xsd.page>(a.Select(c => c.a).ToArray()));
 				if (result is null) return null;
-				return new ReadOnlyDictionary<string, ReadOnlyMemory<Xsd.page>>(new SortedList<string, ReadOnlyMemory<Xsd.page>>(result, StringComparer.Ordinal));
+				return _RadicalCharacters = new ReadOnlyDictionary<string, ReadOnlyMemory<Xsd.page>>(new SortedList<string, ReadOnlyMemory<Xsd.page>>(result, StringComparer.Ordinal));
 			}
 		}
 
@@ -100,7 +103,7 @@ public static class Manager
 
 		static ReadOnlyDictionary<int, ReadOnlyMemory<(Xsd.entry, Xsd.page)>>? _StrokeCharacters;
 
-		public static ReadOnlyDictionary<int, ReadOnlyMemory<(Xsd.entry entry,Xsd.page page)>>? StrokeCharacters
+		public static ReadOnlyDictionary<int, ReadOnlyMemory<(Xsd.entry entry, Xsd.page page)>>? StrokeCharacters
 		{
 			get
 			{
@@ -116,7 +119,7 @@ public static class Manager
 						foreach (var s in strokes)
 						{
 							var ss = s + stroke;
-							if (dic.TryGetValue(ss, out var l)) l.Add((c,p));
+							if (dic.TryGetValue(ss, out var l)) l.Add((c, p));
 							else dic.Add(ss, new List<(Xsd.entry, Xsd.page)> { (c, p) });
 						}
 					}
