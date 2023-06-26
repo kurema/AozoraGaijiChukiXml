@@ -40,6 +40,7 @@ public static class Manager
 	public static class Toc
 	{
 		public static IEnumerable<(Xsd.entry entry, Xsd.page page)> AllKanjiEntries => Instance?.kanji?.page?.SelectMany(a => a.entries.Select(b => (b, a))) ?? new (Xsd.entry entry, Xsd.page page)[0];
+		public static IEnumerable<(Xsd.PageOtherEntry entry, Xsd.PageOther page)> AllOtherEntreies => Instance?.other?.PageOther?.SelectMany(a => a.entries.Select(b => (b, a))) ?? new (Xsd.PageOtherEntry entry, Xsd.PageOther page)[0];
 
 		//ところでfieldキーワードはC# 12に延長。
 		//https://github.com/dotnet/csharplang/issues/140#issuecomment-1209645505

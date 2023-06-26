@@ -14,7 +14,7 @@ public static partial class SearchQueries
 			var tokens = Tokenize(text);
 			List<List<ISearchQuery>> stack = new() { new() };
 			List<List<ISearchQuery>?> stackAnd = new() { null };
-			(string men, string ku, string ten) currentJisX0213 = (string.Empty, string.Empty, string.Empty);
+			(string men, string ku, string ten) = (string.Empty, string.Empty, string.Empty);
 
 			foreach (var token in tokens)
 			{
@@ -23,11 +23,11 @@ public static partial class SearchQueries
 				var span = text.AsSpan().Slice(token.index, token.length);
 				switch (token.token)
 				{
-					case TokenKind.JisX0213Men: currentJisX0213.men = ToHalf(span.ToString()); break;
-					case TokenKind.JisX0213Ku: currentJisX0213.ku = ToHalf(span.ToString()); break;
+					case TokenKind.JisX0213Men: men = ToHalf(span.ToString()); break;
+					case TokenKind.JisX0213Ku: ku = ToHalf(span.ToString()); break;
 					case TokenKind.JisX0213Ten:
-						currentJisX0213.ten = ToHalf(span.ToString());
-						AddQuery(SearchQueryWord.FromJisX0213(currentJisX0213.men, currentJisX0213.ku, currentJisX0213.ten) ?? new SearchQueryWord($"{currentJisX0213.men}-{currentJisX0213.ku}-{currentJisX0213.ten}"));
+						ten = ToHalf(span.ToString());
+						AddQuery(SearchQueryWord.FromJisX0213(men, ku, ten) ?? new SearchQueryWord($"{men}-{ku}-{ten}"));
 						break;
 					case TokenKind.Unicode:
 						AddQuery(SearchQueryWord.FromCodepoint(ToHalf(span.ToString())));

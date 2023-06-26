@@ -62,6 +62,11 @@ public static partial class SearchQueries
 		{
 			foreach (var child in Children) child.ResetWordsNoHit();
 		}
+
+		public override string ToString()
+		{
+			return string.Join(" or ", Children.Select(a => a is SearchQueryOr or SearchQueryAnd ? $"( {a} )" : a.ToString()));
+		}
 	}
 
 	public class SearchQueryAnd : ISearchQuery
@@ -108,6 +113,11 @@ public static partial class SearchQueries
 		{
 			foreach (var child in Children) child.ResetWordsNoHit();
 		}
+
+		public override string ToString()
+		{
+			return string.Join(" and ", Children.Select(a => a is SearchQueryOr or SearchQueryAnd ? $"( {a} )" : a.ToString()));
+		}
 	}
 
 	public class SearchQueryStrokes : ISearchQuery
@@ -125,7 +135,7 @@ public static partial class SearchQueries
 		{
 			if (page?.radical?.characters?.character is null) return false;
 			if (!int.TryParse(entry.strokes, out var stroke)) return false;
-			var strks = page.radical.characters.character.Select(Aozora.GaijiChuki.Manager.Toc.GetStrokeCount).Where(a => a >= 0).GroupBy(a => a).Where(a => a.Count() > 1).Select(a => a.First()).ToArray();
+			var strks = page.radical.characters.character.Select(Manager.Toc.GetStrokeCount).Where(a => a >= 0).GroupBy(a => a).Select(a => a.First()).ToArray();
 			foreach (var strk in strks)
 			{
 				if (strk + stroke == Stroke) return true;
@@ -138,7 +148,7 @@ public static partial class SearchQueries
 		public bool Is(page page)
 		{
 			if (page?.radical?.characters?.character is null) return false;
-			return page.radical.characters.character.Select(Aozora.GaijiChuki.Manager.Toc.GetStrokeCount).Any(strk => strk > 0 && strk == Stroke);
+			return page.radical.characters.character.Select(Manager.Toc.GetStrokeCount).Any(strk => strk > 0 && strk == Stroke);
 		}
 
 		public bool Is(PageOther page) => false;
@@ -149,6 +159,10 @@ public static partial class SearchQueries
 
 		public void ResetWordsNoHit() { }
 
+		public override string ToString()
+		{
+			return $"{Stroke}画";
+		}
 	}
 
 	public class SearchQueryWord : ISearchQuery
@@ -170,6 +184,11 @@ public static partial class SearchQueries
 			_WordsNoHit = TextSplited.ToList();
 		}
 
+		public override string ToString()
+		{
+			return $"\"{Text}\"";
+		}
+
 		public static SearchQueryWord FromCodepoint(params string[] text)
 		{
 			var r = string.Join(string.Empty, text.Select(org =>
@@ -186,8 +205,6 @@ public static partial class SearchQueries
 			if (r is null) return null;
 			return new SearchQueryWord(r);
 		}
-
-
 
 		public string Text { get; init; }
 
@@ -265,7 +282,7 @@ public static partial class SearchQueries
 
 	public class SearchQueryAny : ISearchQuery
 	{
-		public IEnumerable<string> WordsNoHit => new string[0];
+		public IEnumerable<string> WordsNoHit => Array.Empty<string>();
 
 		public bool Is(entry entry, page page) => true;
 
@@ -280,11 +297,16 @@ public static partial class SearchQueries
 		public bool IsInNote(PageOtherEntry entry) => true;
 
 		public void ResetWordsNoHit() { }
+
+		public override string ToString()
+		{
+			return "*";
+		}
 	}
 
 	public class SearchQueryNone : ISearchQuery
 	{
-		public IEnumerable<string> WordsNoHit => new string[0];
+		public IEnumerable<string> WordsNoHit => Array.Empty<string>();
 
 		public bool Is(entry entry, page page) => false;
 
@@ -299,5 +321,10 @@ public static partial class SearchQueries
 		public bool IsInNote(PageOtherEntry entry) => false;
 
 		public void ResetWordsNoHit() { }
+
+		public override string ToString()
+		{
+			return "∅";
+		}
 	}
 }
