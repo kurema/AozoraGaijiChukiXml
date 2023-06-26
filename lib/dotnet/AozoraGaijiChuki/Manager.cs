@@ -14,6 +14,10 @@ public static class Manager
 	public static Xsd.dictionary? GetContentOrLoad() => Instance ??= LoadContent();
 	public static async Task<Xsd.dictionary?> GetContentOrLoadAsync() => Instance ??= await LoadContentAsync().ConfigureAwait(false);
 
+	public static Func<int, int, int, string?>? Jisx0213Provider { get; set; } = (_, _, _) => null;
+	public static Func<string, (int men, int ku, int ten)>? Jisx0213ReverseProvider { get; set; } = _ => (-1, -1, -1);
+
+
 	static Xsd.dictionary? LoadContent()
 	{
 		//if (Instance is not null) return Instance;

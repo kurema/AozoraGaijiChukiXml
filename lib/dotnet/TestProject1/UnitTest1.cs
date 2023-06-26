@@ -7,7 +7,7 @@ public class UnitTest1
 	[Fact]
 	public void Test1()
 	{
-		var content = Aozora.GaijiChuki.Manager.LoadContent();
+		var content = Aozora.GaijiChuki.Manager.GetContentOrLoad();
 
 		Assert.NotNull(content);
 		Assert.Equal("一", content.kanji.page[0].radical.characters.character[0]);
