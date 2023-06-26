@@ -16,4 +16,8 @@
     <EmbeddedResource Include="Chuki.gz" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="SearchQueries\" />
+  </ItemGroup>
+
 </Project>
