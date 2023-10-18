@@ -14,7 +14,8 @@ public static partial class SearchQueries
 			var tokens = Tokenize(text);
 			List<List<ISearchQuery>> stack = new() { new() };
 			List<List<ISearchQuery>?> stackAnd = new() { null };
-			(string men, string ku, string ten) = (string.Empty, string.Empty, string.Empty);
+			(string men, string ku) = (string.Empty, string.Empty);
+			string ten;
 
 			foreach (var token in tokens)
 			{
